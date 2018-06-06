@@ -23,3 +23,9 @@ After trying to reproduce the issue locally, I found that it's only hang when
 Based on http RFC (https://tools.ietf.org/html/rfc7230#section-3.3.2), `A server MUST NOT send a Content-Length header field in any response with a status code of 1xx (Informational) or 204 (No Content).`
 
 To quick demostrate the issue, I created a few test scripts.
+
+For different api response, by using nodejs client with http keep alive
+- works when 204 without content-length
+- works when 204 with content-length=0
+- works when 204 with content-length>0 and has something in the body
+- DOESN”T work when 204 with content-length>0 and has no body, and this is the scenario of the bug. The client will wait until server side close the connection which is the keepAliveTimeout settings
